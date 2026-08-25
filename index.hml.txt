@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Happy Birthday My Love!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            color: #4a4a4a;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        /* Floating Background Hearts ❤️ */
+        .bg-heart {
+            position: fixed;
+            font-size: 24px;
+            animation: float 5s linear infinite;
+            top: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-105vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
+        /* Music Toggle Button */
+        .music-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 999;
+            background: #ffffff;
+            border: 2px solid #ff4757;
+            color: #ff4757;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        .music-btn:active { transform: scale(0.9); }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 480px;
+            background: rgba(255, 240, 243, 0.92);
+            padding: 30px 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 107, 129, 0.3);
+            border: 2px solid #ffccd5;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Slide Control */
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            color: #ff4757;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #ff4757;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #57606f;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+            background-color: #ff4757;
+            color: white;
+            touch-action: manipulation;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-yes { background-color: #2ed573; box-shadow: 0 4px 12px rgba(46, 213, 115, 0.3); }
+        .btn-no { background-color: #ff4757; }
+
+        /* --- Animated Full Body Panda --- */
+        .panda-body-container {
+            width: 140px;
+            height: 160px;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+        .panda-head-full {
+            width: 100px;
+            height: 85px;
+            background: #fff;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            border: 3px solid #2f3542;
+            z-index: 2;
+        }
+        .panda-ear {
+            width: 30px;
+            height: 30px;
+            background: #2f3542;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+        }
+        .panda-ear.left { left: 15px; }
+        .panda-ear.right { right: 15px; }
+        .panda-eye-patch {
+            width: 24px;
+            height: 30px;
+            background: #2f3542;
+            border-radius: 50%;
+            position: absolute;
+            top: 25px;
+        }
+        .panda-eye-patch.left { left: 18px; transform: rotate(15deg); }
+        .panda-eye-patch.right { right: 18px; transform: rotate(-15deg); }
+        .panda-pupil {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            animation: pandaBlink 4s infinite;
+        }
+        .panda-blush {
+            width: 14px;
+            height: 8px;
+            background: #ff7675;
+            border-radius: 50%;
+            position: absolute;
+            top: 48px;
+            opacity: 0.6;
+        }
+        .panda-blush.left { left: 15px; }
+        .panda-blush.right { right: 15px; }
+        .panda-nose {
+            width: 12px;
+            height: 7px;
+            background: #2f3542;
+            border-radius: 50%;
+            position: absolute;
+            top: 42px;
+            left: 44px;
+        }
+        .panda-mouth {
+            width: 14px;
+            height: 6px;
+            border-bottom: 2px solid #2f3542;
+            border-radius: 0 0 50% 50%;
+            position: absolute;
+            top: 50px;
+            left: 43px;
+        }
+        .panda-torso {
+            width: 90px;
+            height: 80px;
+            background: #fff;
+            border: 3px solid #2f3542;
+            border-radius: 50% 50% 40% 40%;
+            position: absolute;
+            top: 75px;
+            left: 25px;
+            z-index: 1;
+        }
+        .panda-belly {
+            width: 60px;
+            height: 50px;
+            background: #ffe6e8;
+            border-radius: 50%;
+            position: absolute;
+            top: 15px;
+            left: 12px;
+        }
+        .panda-arm {
+            width: 28px;
+            height: 55px;
+            background: #2f3542;
+            border-radius: 20px;
+            position: absolute;
+            top: 80px;
+            z-index: 2;
+        }
+        .panda-arm.left { left: 8px; transform: rotate(20deg); }
+        .panda-arm.right { right: 8px; transform: rotate(-20deg); }
+        .panda-leg {
+            width: 32px;
+            height: 35px;
+            background: #2f3542;
+            border-radius: 40% 40% 50% 50%;
+            position: absolute;
+            top: 135px;
+            z-index: 0;
+        }
+        .panda-leg.left { left: 22px; }
+        .panda-leg.right { right: 22px; }
+
+        @keyframes pandaBlink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        /* Angry Panda Animation */
+        .angry .panda-head-full { animation: shakeHead 0.3s infinite; }
+        .angry .panda-mouth {
+            border-bottom: none;
+            border-top: 3px solid #ff4757;
+            border-radius: 50% 50% 0 0;
+            top: 52px;
+        }
+        .angry-steam {
+            display: none;
+            position: absolute;
+            font-size: 20px;
+            top: -10px;
+            animation: steamUp 0.6s infinite alternate;
+        }
+        .angry-steam.left { left: 10px; }
+        .angry-steam.right { right: 10px; }
+        .angry .angry-steam { display: block; }
+
+        @keyframes shakeHead {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px) rotate(-4deg); }
+            75% { transform: translateX(4px) rotate(4deg); }
+        }
+        @keyframes steamUp {
+            from { transform: translateY(0); opacity: 0.5; }
+            to { transform: translateY(-8px); opacity: 1; }
+        }
+
+        /* --- Birthday Cake & Candle --- */
+        .cake-container {
+            width: 150px;
+            height: 120px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .cake-base {
+            width: 140px;
+            height: 60px;
+            background: #ff7675;
+            border-radius: 15px 15px 10px 10px;
+            position: absolute;
+            bottom: 0;
+            left: 5px;
+            border: 3px solid #2f3542;
+        }
+        .cake-top {
+            width: 140px;
+            height: 25px;
+            background: #fff;
+            border-radius: 15px 15px 0 0;
+            position: absolute;
+            top: 40px;
+            left: 5px;
+            border: 3px solid #2f3542;
+        }
+        .candle {
+            width: 12px;
+            height: 35px;
+            background: #74b9ff;
+            position: absolute;
+            top: 10px;
+            left: 69px;
+            border-radius: 4px;
+            border: 2px solid #2f3542;
+            cursor: pointer;
+        }
+        .flame {
+            width: 14px;
+            height: 20px;
+            background: #ff9f43;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: -20px;
+            left: -3px;
+            box-shadow: 0 0 10px #ff9f43;
+            animation: burn 0.5s infinite alternate;
+        }
+        .flame.off { display: none; }
+        @keyframes burn {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        /* --- Slide 4 Gift Box Animation --- */
+        .gift-box-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+        .gift-box-lid {
+            width: 108px;
+            height: 25px;
+            background-color: #ff4757;
+            border-radius: 6px;
+            position: absolute;
+            top: 0;
+            left: -4px;
+            z-index: 2;
+            transition: transform 0.6s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .gift-box-body {
+            width: 100px;
+            height: 80px;
+            background-color: #ff6b81;
+            border-radius: 0 0 10px 10px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .gift-box-wrapper.opened .gift-box-lid {
+            transform: translateY(-50px) rotate(-15deg);
+        }
+
+        /* --- Kisses Burst Overlay --- */
+        .kisses-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .kiss-emoji {
+            position: absolute;
+            font-size: 38px;
+            animation: kissFloat 2.2s ease-out forwards;
+        }
+        @keyframes kissFloat {
+            0% { transform: scale(0.3) translateY(0); opacity: 1; }
+            100% { transform: scale(1.6) translateY(-300px); opacity: 0; }
+        }
+
+        /* --- Gift Boxes Slide 5 --- */
+        .gifts-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .gift-item {
+            width: 90px;
+            height: 90px;
+            background-color: #ff6b81;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .gift-rib-v {
+            position: absolute;
+            width: 16px;
+            height: 100%;
+            background-color: #ffd32a;
+        }
+        .gift-rib-h {
+            position: absolute;
+            width: 100%;
+            height: 16px;
+            background-color: #ffd32a;
+        }
+        .gift-num {
+            position: relative;
+            z-index: 2;
+            color: #2f3542;
+            font-weight: bold;
+            background: #fff;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+        /* Modal Pop-up */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .modal-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 350px;
+            width: 100%;
+            position: relative;
+            animation: popIn 0.3s ease-out;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-img {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a4b0be;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Happy Birthday Background Audio -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a7051b.mp3?filename=happy-birthday-157920.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="music-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
+
+    <div class="kisses-overlay" id="kissesOverlay"></div>
+
+    <div class="container">
+        
+        <!-- SLIDE 1: Welcome -->
+        <div class="slide active" id="slide1">
+            <div style="font-size: 55px; margin-bottom: 10px;">🎁</div>
+            <h1>Hey My Love!</h1>
+            <p>I have a special surprise just for you on your special day (11th Sept)!</p>
+            <button class="btn" onclick="startSurprise()">Click to Open ✨</button>
+        </div>
+
+        <!-- SLIDE 2: Cake & Candle -->
+        <div class="slide" id="slide2">
+            <h2>Happy Birthday Cutie! 🎂</h2>
+            
+            <div class="panda-body-container">
+                <div class="panda-ear left"></div>
+                <div class="panda-ear right"></div>
+                <div class="panda-head-full">
+                    <div class="panda-eye-patch left"><div class="panda-pupil"></div></div>
+                    <div class="panda-eye-patch right"><div class="panda-pupil"></div></div>
+                    <div class="panda-blush left"></div>
+                    <div class="panda-blush right"></div>
+                    <div class="panda-nose"></div>
+                    <div class="panda-mouth"></div>
+                </div>
+                <div class="panda-torso"><div class="panda-belly"></div></div>
+                <div class="panda-arm left"></div>
+                <div class="panda-arm right"></div>
+                <div class="panda-leg left"></div>
+                <div class="panda-leg right"></div>
+            </div>
+
+            <div class="cake-container">
+                <div class="cake-top"></div>
+                <div class="cake-base"></div>
+                <div class="candle" onclick="blowCandle()">
+                    <div class="flame" id="flame"></div>
+                </div>
+            </div>
+
+            <p id="candleText">Tap the candle to blow it out and make a wish!</p>
+            <button class="btn" id="continueBtn2" style="display:none;" onclick="nextSlide(3)">Continue 💖</button>
+        </div>
+
+        <!-- SLIDE 3: Question with Interactive Panda -->
+        <div class="slide" id="slide3">
+            <h2 id="slide3Title">I have more things for you!</h2>
+            
+            <div class="panda-body-container" id="pandaSlide3">
+                <div class="angry-steam left">💨</div>
+                <div class="angry-steam right">💨</div>
+                <div class="panda-ear left"></div>
+                <div class="panda-ear right"></div>
+                <div class="panda-head-full">
+                    <div class="panda-eye-patch left"><div class="panda-pupil"></div></div>
+                    <div class="panda-eye-patch right"><div class="panda-pupil"></div></div>
+                    <div class="panda-blush left"></div>
+                    <div class="panda-blush right"></div>
+                    <div class="panda-nose"></div>
+                    <div class="panda-mouth"></div>
+                </div>
+                <div class="panda-torso"><div class="panda-belly"></div></div>
+                <div class="panda-arm left"></div>
+                <div class="panda-arm right"></div>
+                <div class="panda-leg left"></div>
+                <div class="panda-leg right"></div>
+            </div>
+
+            <p id="slide3Sub">Do you want to see them? 🥺</p>
+            
+            <div class="btn-group" id="slide3Btns">
+                <button class="btn btn-yes" onclick="nextSlide(4)">YES! 🥰</button>
+                <button class="btn btn-no" onclick="handleAngryNo()">NO 😤</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Surprise Gift Box -->
+        <div class="slide" id="slide4">
+            <h2>A Special Gift For You! 🎁</h2>
+            
+            <div class="gift-box-wrapper" id="giftBoxSlide4" onclick="openSpecialGift()">
+                <div class="gift-box-lid">
+                    <div class="gift-rib-v"></div>
+                </div>
+                <div class="gift-box-body">
+                    <div class="gift-rib-v"></div>
+                    <div class="gift-rib-h"></div>
+                </div>
+            </div>
+
+            <p id="openHint">Click the box or the button below!</p>
+            <button class="btn" id="openGiftBtn" onclick="openSpecialGift()">Open 🎁</button>
+
+            <div id="kissNote" style="display:none; margin-top: 15px;">
+                <h2 style="color: #ff4757; font-size: 1.8rem; margin-bottom: 8px;">
+                    Happy Birthday My Love! 💖
+                </h2>
+                <p style="font-size: 1.3rem; color: #ff4757; font-weight: bold; margin-bottom: 12px;">
+                    I Love You! 😘 💋 😘
+                </p>
+                <p style="font-size: 1rem; color: #57606f;">
+                    Sending you thousands of warm hugs and endless kisses. You are the best thing that ever happened to me!
+                </p>
+                <button class="btn" onclick="nextSlide(5)" style="margin-top: 15px;">See Next Surprises 💖</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: 3 Memory Gift Boxes -->
+        <div class="slide" id="slide5">
+            <h2>Your Memory Boxes 💌</h2>
+            <p>Tap each gift box to see your photos and special notes!</p>
+
+            <div class="gifts-grid">
+                <div class="gift-item" onclick="openMemoryModal(0)">
+                    <div class="gift-rib-v"></div>
+                    <div class="gift-rib-h"></div>
+                    <span class="gift-num">#1</span>
+                </div>
+                <div class="gift-item" onclick="openMemoryModal(1)">
+                    <div class="gift-rib-v"></div>
+                    <div class="gift-rib-h"></div>
+                    <span class="gift-num">#2</span>
