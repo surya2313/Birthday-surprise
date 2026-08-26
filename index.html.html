@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Happy Birthday My Love!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            color: #4a4a4a;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        /* Background Floating Hearts */
+        .bg-heart {
+            position: fixed;
+            font-size: 24px;
+            animation: floatUp 6s linear infinite;
+            top: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-105vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
+        /* Full Screen Floating Emoji Overlay */
+        .emoji-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .floating-emoji {
+            position: absolute;
+            font-size: 44px;
+            animation: emojiFloat 2.5s ease-out forwards;
+        }
+        @keyframes emojiFloat {
+            0% { transform: scale(0.3) translateY(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.4) translateY(-160px) rotate(15deg); opacity: 0.95; }
+            100% { transform: scale(1.9) translateY(-360px) rotate(-15deg); opacity: 0; }
+        }
+
+        /* Music Button */
+        .music-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 9999;
+            background: #ffffff;
+            border: 2px solid #ff4757;
+            color: #ff4757;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 480px;
+            background: rgba(255, 240, 243, 0.95);
+            padding: 30px 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 107, 129, 0.3);
+            border: 2px solid #ffccd5;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Slide System */
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 { color: #ff4757; font-size: 2rem; margin-bottom: 15px; }
+        h2 { color: #ff4757; font-size: 1.6rem; margin-bottom: 12px; }
+        p { font-size: 1.05rem; margin-bottom: 18px; color: #57606f; line-height: 1.45; }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 26px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+            background-color: #ff4757;
+            color: white;
+            touch-action: manipulation;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-yes { background-color: #2ed573; box-shadow: 0 4px 12px rgba(46, 213, 115, 0.3); }
+
+        /* Animated Stuffed Bear Helper */
+        .stuffed-bear-wrapper {
+            margin: 10px auto;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .bear-avatar {
+            font-size: 75px;
+            display: inline-block;
+            animation: bearIdle 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.15));
+        }
+        @keyframes bearIdle {
+            0% { transform: translateY(0) rotate(-3deg); }
+            100% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .bear-avatar.opening {
+            animation: bearOpenBox 0.8s ease-in-out infinite alternate;
+        }
+        @keyframes bearOpenBox {
+            0% { transform: scale(1) translateY(0); }
+            100% { transform: scale(1.18) translateY(-15px); }
+        }
+        .bear-speech-bubble {
+            background: white;
+            border: 2px solid #ff6b81;
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #ff4757;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        /* 3D Realistic Gift Box System */
+        .gift-box-3d {
+            width: 130px;
+            height: 130px;
+            margin: 15px auto;
+            position: relative;
+            cursor: pointer;
+            perspective: 600px;
+        }
+        .box-lid-3d {
+            width: 138px;
+            height: 35px;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            border-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: -4px;
+            z-index: 3;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .box-lid-3d::after {
+            content: "🎀";
+            font-size: 32px;
+            position: absolute;
+            top: -22px;
+            left: 50px;
+        }
+        .box-body-3d {
+            width: 130px;
+            height: 100px;
+            background: linear-gradient(135deg, #ee5253, #ff6b81);
+            border-radius: 0 0 12px 12px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .box-ribbon-v {
+            position: absolute;
+            width: 24px;
+            height: 100%;
+            background: linear-gradient(to right, #feca57, #ff9f43);
+            left: 53px;
+        }
+        .gift-box-3d.opened .box-lid-3d {
+            transform: translateY(-80px) rotateX(40deg) rotateZ(-10deg);
+        }
+
+        /* Cake & Candle */
+        .cake-svg-wrapper {
+            width: 220px;
+            height: 180px;
+            margin: 10px auto;
+            position: relative;
+            cursor: pointer;
+        }
+        .flame-svg {
+            transform-origin: center bottom;
+            animation: flameFlicker 0.1s infinite alternate;
+        }
+        @keyframes flameFlicker {
+            0% { transform: scale(1) rotate(-1deg); }
+            100% { transform: scale(1.1) rotate(1deg); }
+        }
+        .smoke-puff {
+            opacity: 0;
+            transform-origin: center;
+        }
+        .smoke-puff.active {
+            animation: smokeRise 2s ease-out forwards;
+        }
+        @keyframes smokeRise {
+            0% { opacity: 0.8; transform: translateY(0) scale(0.5); }
+            100% { opacity: 0; transform: translateY(-40px) scale(2); }
+        }
+
+        /* Gift Boxes Grid for Memory Pages */
+        .boxes-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .small-box {
+            width: 95px;
+            height: 95px;
+            background: linear-gradient(135deg, #ff6b81, #ff4757);
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 18px rgba(255, 71, 87, 0.3);
+            transition: transform 0.2s;
+        }
+        .small-box:active { transform: scale(0.92); }
+        .small-box span { font-size: 28px; }
+        .small-box p { color: white; font-weight: bold; margin: 0; font-size: 0.85rem; }
+
+        /* Larger Photo Cards Modal */
+        .full-page-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.88);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .full-page-card {
+            background: #fff;
+            border-radius: 24px;
+            max-width: 520px;
+            width: 95%;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 25px 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: modalPop 0.4s ease-out;
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.6); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .full-page-img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+        }
+        .full-page-note {
+            font-size: 1.15rem;
+            color: #2f3542;
+            line-height: 1.55;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .close-modal-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+        }
+
+        /* Scratch Card Canvas */
+        .scratch-container {
+            position: relative;
+            width: 280px;
+            height: 140px;
+            margin: 15px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .scratch-reveal-text {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff0f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            font-weight: bold;
+            color: #ff4757;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        #scratchCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            cursor: pointer;
+        }
+
+        /* Balloons */
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 65px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            cursor: pointer;
+            animation: floatBalloon 5s ease-in-out infinite alternate;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.15);
+        }
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 23px;
+            width: 2px;
+            height: 15px;
+            background: rgba(0,0,0,0.2);
+        }
+        @keyframes floatBalloon {
+            0% { transform: translateY(0) rotate(-5deg); }
+            100% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Quiz Box */
+        .quiz-opt {
+            background: white;
+            border: 2px solid #ffccd5;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4a4a4a;
+            transition: all 0.2s;
+        }
+        .quiz-opt:hover { background: #ffe6e8; border-color: #ff4757; }
+    </style>
+</head>
+<body>
+
+    <button class="music-btn" onclick="toggleAudio()" id="musicBtn">🎵</button>
+    <div class="emoji-overlay" id="emojiOverlay"></div>
+
+    <div class="container">
+        
+        <!-- SLIDE 1: Welcome -->
+        <div class="slide active" id="slide1">
+            <div style="font-size: 60px; margin-bottom: 10px;">🧸</div>
+            <h1>Hey My Love!</h1>
+            <p>Your personal stuffed teddy bear and I have built a multi-stage birthday journey for you!</p>
+            <button class="btn" onclick="startSurprise()">Let's Begin ✨</button>
+        </div>
+
+        <!-- SLIDE 2: Interactive Birthday Cake -->
+        <div class="slide" id="slide2">
+            <h2>Make a Birthday Wish! 🎂</h2>
+            
+            <div class="cake-svg-wrapper" onclick="blowCandle()">
+                <svg width="200" height="180" viewBox="0 0 200 180">
+                    <ellipse cx="100" cy="160" rx="90" ry="15" fill="#dfe6e9"/>
+                    <rect x="90" y="160" width="20" height="15" fill="#b2bec3"/>
+                    <path d="M 30,120 Q 100,140 170,120 L 170,150 Q 100,170 30,150 Z" fill="#ff7675"/>
+                    <ellipse cx="100" cy="120" rx="70" ry="15" fill="#fd79a8"/>
+                    <path d="M 45,80 Q 100,95 155,80 L 155,120 Q 100,135 45,120 Z" fill="#ffeaa7"/>
+                    <ellipse cx="100" cy="80" rx="55" ry="12" fill="#fff"/>
+                    <path d="M 45,80 Q 55,98 65,84 Q 75,102 85,83 Q 100,105 115,83 Q 130,100 140,84 Q 150,96 155,80 Z" fill="#fff"/>
+                    <rect x="96" y="45" width="8" height="35" rx="2" fill="#74b9ff"/>
+                    <line x1="100" y1="45" x2="100" y2="38" stroke="#2f3542" stroke-width="2"/>
+                    <g id="flameGroup" class="flame-svg">
+                        <ellipse cx="100" cy="28" rx="7" ry="12" fill="#ff9f43"/>
+                        <ellipse cx="100" cy="30" rx="4" ry="7" fill="#feca57"/>
+                    </g>
+                    <circle id="smoke1" class="smoke-puff" cx="100" cy="25" r="6" fill="#b2bec3"/>
+                    <circle id="smoke2" class="smoke-puff" cx="100" cy="15" r="9" fill="#dfe6e9"/>
+                </svg>
+            </div>
+
+            <p id="candleText">Tap the candle flame to blow it out!</p>
+            <button class="btn" id="continueBtn2" style="display:none;" onclick="nextSlide(3)">Continue 💖</button>
+        </div>
+
+        <!-- SLIDE 3: Meet Teddy Assistant -->
+        <div class="slide" id="slide3">
+            <h2>Meet Your Birthday Assistant! 🧸</h2>
+            <div class="stuffed-bear-wrapper">
+                <span class="bear-avatar">🧸</span>
+            </div>
+            <p>I am your stuffed toy bear! I will help you open 5 special gift boxes filled with love, hugs, and memories!</p>
+            <button class="btn btn-yes" onclick="nextSlide(4)">Open 1st Gift Box 🎁</button>
+        </div>
+
+        <!-- SLIDE 4: 1ST GIFT BOX PAGE (Happy Birthday + Celebratory Emojis) -->
+        <div class="slide" id="slide4">
+            <h2>Gift Box #1 🎁</h2>
+            
+            <div class="stuffed-bear-wrapper" onclick="openBox1()">
+                <div class="bear-speech-bubble" id="bearBubble1">Tap me or the box to unwrap!</div>
+                <div><span class="bear-avatar" id="bearAvatar1">🧸</span></div>
+            </div>
+
+            <div class="gift-box-3d" id="box1" onclick="openBox1()">
+                <div class="box-lid-3d"><div class="box-ribbon-v"></div></div>
+                <div class="box-body-3d"><div class="box-ribbon-v"></div></div>
+            </div>
+
+            <div id="box1Note" style="display:none; margin-top: 15px;">
+                <h1 style="color: #ff4757; font-size: 2rem; margin-bottom: 12px;">Happy Birthday My Love! 🎉🥳✨</h1>
+                <p style="font-size: 1.1rem; color: #57606f;">
+                    Wishing you the most magical, joyful, and beautiful birthday filled with bright smiles and endless happiness! 🎈🎂🥂
+                </p>
+                <button class="btn" onclick="nextSlide(5)" style="margin-top: 15px;">Go to 2nd Gift Box ➡️</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: 2ND GIFT BOX PAGE (Hugs & Kisses + Floating Kiss Explosion) -->
+        <div class="slide" id="slide5">
+            <h2>Gift Box #2 🎁</h2>
+            
+            <div class="stuffed-bear-wrapper" onclick="openBox2()">
+                <div class="bear-speech-bubble" id="bearBubble2">Bear is waiting to give you kisses!</div>
+                <div><span class="bear-avatar" id="bearAvatar2">🧸</span></div>
+            </div>
+
+            <div class="gift-box-3d" id="box2" onclick="openBox2()">
+                <div class="box-lid-3d"><div class="box-ribbon-v"></div></div>
+                <div class="box-body-3d"><div class="box-ribbon-v"></div></div>
+            </div>
+
+            <div id="box2Note" style="display:none; margin-top: 15px;">
+                <h2 style="color: #ff4757; margin-bottom: 8px;">A Lot of Hugs & Kisses From Me My Love! 💋🤗</h2>
+                <p style="font-size: 1.15rem; color: #ff4757; font-weight: bold; margin-bottom: 12px;">
+                    I Love You So Much! 😘 💋 😘 💖
+                </p>
+                <p style="font-size: 1.05rem; color: #57606f;">
+                    Sending you thousands of warm hugs, sweetest kisses, and all my heart today and forever!
+                </p>
+                <button class="btn" onclick="nextSlide(6)" style="margin-top: 15px;">Go to 3rd Gift Box ➡️</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: 3RD GIFT BOX PAGE (Memory Boxes - Part 1) -->
+        <div class="slide" id="slide6">
+            <h2>Gift Box #3: Memory Boxes (Part 1) 💌</h2>
+            <div class="bear-speech-bubble">Teddy saved these favorite memories for you!</div>
+            <p>Tap each box to open larger photo cards & love notes!</p>
+
+            <div class="boxes-grid">
+                <div class="small-box" onclick="openFullModal(0)"><span>🎁</span><p>Memory #1</p></div>
+                <div class="small-box" onclick="openFullModal(1)"><span>🎁</span><p>Memory #2</p></div>
+                <div class="small-box" onclick="openFullModal(2)"><span>🎁</span><p>Memory #3</p></div>
+            </div>
+
+            <button class="btn" onclick="nextSlide(7)" style="margin-top: 30px;">Go to 4th Gift Box ➡️</button>
+        </div>
+
+        <!-- SLIDE 7: 4TH GIFT BOX PAGE (Memory Boxes - Part 2) -->
+        <div class="slide" id="slide7">
+            <h2>Gift Box #4: Memory Boxes (Part 2) 📸</h2>
+            <div class="bear-speech-bubble">More sweet memories ahead!</div>
+            <p>Tap these boxes to expand larger cards!</p>
+
+            <div class="boxes-grid">
+                <div class="small-box" onclick="openFullModal(3)"><span>🎁</span><p>Memory #4</p></div>
+                <div class="small-box" onclick="openFullModal(4)"><span>🎁</span><p>Memory #5</p></div>
+                <div class="small-box" onclick="openFullModal(5)"><span>🎁</span><p>Memory #6</p></div>
+            </div>
+
+            <button class="btn" onclick="nextSlide(8)" style="margin-top: 30px;">Go to 5th Gift Box ➡️</button>
+        </div>
+
+        <!-- SLIDE 8: 5TH GIFT BOX PAGE (Memory Boxes - Part 3) -->
+        <div class="slide" id="slide8">
+            <h2>Gift Box #5: Memory Boxes (Part 3) 💖</h2>
+            <div class="bear-speech-bubble">Teddy's special final memory set!</div>
+            <p>Tap these boxes to expand your final photo memories!</p>
+
+            <div class="boxes-grid">
+                <div class="small-box" onclick="openFullModal(6)"><span>🎁</span><p>Memory #7</p></div>
+                <div class="small-box" onclick="openFullModal(7)"><span>🎁</span><p>Memory #8</p></div>
+                <div class="small-box" onclick="openFullModal(8)"><span>🎁</span><p>Memory #9</p></div>
+            </div>
+
+            <button class="btn" onclick="nextSlide(9)" style="margin-top: 30px;">Scratch Card Activity 🎨 ➡️</button>
+        </div>
+
+        <!-- SLIDE 9: Scratch Card Activity -->
+        <div class="slide" id="slide9">
+            <h2>Scratch to Reveal Secret Note! 🎨</h2>
+            <p>Use your finger or mouse to scratch off the pink layer!</p>
+
+            <div class="scratch-container">
+                <div class="scratch-reveal-text">
+                    "You are my absolute favorite person in the entire world! Happy Birthday My Love! ❤️"
+                </div>
+                <canvas id="scratchCanvas" width="280" height="140"></canvas>
+            </div>
+
+            <button class="btn" onclick="nextSlide(10)" style="margin-top: 15px;">Pop Balloons Activity 🎈</button>
+        </div>
+
+        <!-- SLIDE 10: Balloon Popping -->
+        <div class="slide" id="slide10" style="position: relative; min-height: 280px;">
+            <h2>Pop the Balloons! 🎈</h2>
+            <p>Tap the floating balloons to pop them and reveal a message!</p>
+
+            <div class="balloon" style="background:#ff4757; left: 15%; top: 70px;" onclick="popBalloon(this)"></div>
+            <div class="balloon" style="background:#74b9ff; left: 42%; top: 90px;" onclick="popBalloon(this)"></div>
+            <div class="balloon" style="background:#55efc4; left: 70%; top: 65px;" onclick="popBalloon(this)"></div>
+
+            <div id="balloonNote" style="display:none; margin-top: 110px;">
+                <p style="font-weight: bold; color: #ff4757; font-size: 1.15rem;">
+                    "You bring pop, color, and joy into my world every single day!" ❤️
+                </p>
+                <button class="btn" onclick="nextSlide(11)">Love Quiz 🧩 ➡️</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Love Quiz -->
+        <div class="slide" id="slide11">
+            <h2>Quick Love Quiz! 🧩</h2>
+            <p>Who loves you the most in the entire universe?</p>
+
+            <div class="quiz-opt" onclick="answerQuiz(true)">A) Me! (1000% Correct) ❤️</div>
+            <div class="quiz-opt" onclick="answerQuiz(true)">B) Definitely Me! 😘</div>
+            <div class="quiz-opt" onclick="answerQuiz(true)">C) All of the above! 💖</div>
+
+            <div id="quizResult" style="display:none; margin-top: 15px;">
+                <p style="color: #2ed573; font-weight: bold;">Bingo! You got it right! 🥰</p>
+                <button class="btn" onclick="nextSlide(12)">Final Promise Card 💌</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Final Promise Card -->
+        <div class="slide" id="slide12">
+            <h2>My Promise to You 💍</h2>
+            <div style="font-size: 55px; margin-bottom: 10px;">🧸❤️💖</div>
+            <p style="font-size: 1.05rem; line-height: 1.6; color: #2f3542;">
+                On your birthday, I promise to always stand by your side, support your dreams, make you laugh when you are tired, and love you more with every passing year. 
+            </p>
+            <h3 style="color: #ff4757; margin-bottom: 15px;">Have the Best Birthday Ever My Love! 🎉</h3>
+            <button class="btn" onclick="nextSlide(1)">Replay Birthday Journey 🔄</button>
+        </div>
+
+    </div>
+
+    <!-- LARGER FULL PAGE MODAL FOR MEMORIES -->
+    <div class="full-page-modal" id="fullModal">
+        <div class="full-page-card">
+            <img src="" id="modalImg" class="full-page-img" alt="Memory Photo">
+            <div class="full-page-note" id="modalNote"></div>
+            <button class="close-modal-btn" onclick="closeFullModal()">Back to Memory Boxes ↩️</button>
+        </div>
+    </div>
+
+    <script>
+        // Web Audio Synthesizer Music
+        let audioCtx;
+        let isAudioPlaying = false;
+        let musicInterval;
+
+        function playSynthesizedMelody() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const notes = [261.63, 261.63, 293.66, 261.63, 349.23, 329.63, 261.63, 261.63, 293.66, 261.63, 392.00, 349.23];
+            let noteIdx = 0;
+
+            musicInterval = setInterval(() => {
+                if (!isAudioPlaying) return;
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(notes[noteIdx], audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.45);
+                noteIdx = (noteIdx + 1) % notes.length;
+            }, 500);
+        }
+
+        function toggleAudio() {
+            if (isAudioPlaying) {
+                isAudioPlaying = false;
+                clearInterval(musicInterval);
+                document.getElementById('musicBtn').innerText = '🎵';
+            } else {
+                isAudioPlaying = true;
+                playSynthesizedMelody();
+                document.getElementById('musicBtn').innerText = '🎶';
+            }
+        }
+
+        function startSurprise() {
+            if (!isAudioPlaying) toggleAudio();
+            nextSlide(2);
+        }
+
+        function nextSlide(slideNum) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById('slide' + slideNum).classList.add('active');
+            if (slideNum === 9) initScratchCard();
+        }
+
+        function blowCandle() {
+            document.getElementById('flameGroup').style.display = 'none';
+            document.getElementById('smoke1').classList.add('active');
+            document.getElementById('smoke2').classList.add('active');
+            document.getElementById('candleText').innerText = "Yay! Wish made! 🎉";
+            document.getElementById('continueBtn2').style.display = 'inline-block';
+        }
+
+        function triggerEmojiExplosion(emojiArray) {
+            const overlay = document.getElementById('emojiOverlay');
+            overlay.style.display = 'block';
+
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.classList.add('floating-emoji');
+                    el.innerText = emojiArray[Math.floor(Math.random() * emojiArray.length)];
+                    el.style.left = Math.random() * 85 + 5 + 'vw';
+                    el.style.top = Math.random() * 40 + 50 + 'vh';
+                    overlay.appendChild(el);
+
+                    setTimeout(() => el.remove(), 2500);
+                }, i * 70);
+            }
+        }
+
+        // Box 1 Action
+        function openBox1() {
+            document.getElementById('box1').classList.add('opened');
+            document.getElementById('bearAvatar1').classList.add('opening');
+            document.getElementById('bearBubble1').innerText = "Yay! Bear opened Gift #1!";
+            document.getElementById('box1Note').style.display = 'block';
+            triggerEmojiExplosion(['🎉', '🥳', '✨', '🎈', '🎂', '🥂', '💖', '🎁']);
+        }
+
+        // Box 2 Action
+        function openBox2() {
+            document.getElementById('box2').classList.add('opened');
+            document.getElementById('bearAvatar2').classList.add('opening');
+            document.getElementById('bearBubble2').innerText = "Bear is sending all the kisses!";
+            document.getElementById('box2Note').style.display = 'block';
+            triggerEmojiExplosion(['😘', '💋', '💖', '💋', '🤗', '💕', '🥰', '💌']);
+        }
+
+        // Expanded Memory Cards (Boxes #3, #4, & #5 - 9 Memories Total)
+        const memories = [
+            { image: "photo1.jpg", note: "Memory #1: Thank you for bringing so much warmth and brightness into my life! ❤️" },
+            { image: "photo2.jpg", note: "Memory #2: Here's to your beautiful smile and our endless future adventures!" },
+            { image: "photo3.jpg", note: "Memory #3: You are my favorite person in the entire universe! 💋" },
+            { image: "photo4.jpg", note: "Memory #4: Every single moment spent with you is a cherished gift." },
+            { image: "photo5.jpg", note: "Memory #5: Your laugh is literally my favorite sound on earth! 🥰" },
+            { image: "photo6.jpg", note: "Memory #6: Forever yours, today, tomorrow, and always. 💖" },
+            { image: "photo7.jpg", note: "Memory #7: Looking at this day always brings a giant smile to my face!" },
+            { image: "photo8.jpg", note: "Memory #8: I fall in love with you more and more every day." },
+            { image: "photo9.jpg", note: "Memory #9: Here's to creating thousands of new memories together! 🥂❤️" }
+        ];
+
+        function openFullModal(idx) {
+            document.getElementById('modalImg').src = memories[idx].image;
+            document.getElementById('modalNote').innerText = memories[idx].note;
+            document.getElementById('fullModal').style.display = 'flex';
+        }
+
+        function closeFullModal() {
+            document.getElementById('fullModal').style.display = 'none';
+        }
+
+        // Scratch Card Logic
+        let scratchInitialized = false;
+        function initScratchCard() {
+            if (scratchInitialized) return;
+            scratchInitialized = true;
+            const canvas = document.getElementById('scratchCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#ff6b81';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Scratch with your finger! 🐾', canvas.width / 2, canvas.height / 2 + 5);
+
+            let isScratching = false;
+
+            function scratch(e) {
+                if (!isScratching) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 22, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            canvas.addEventListener('mousedown', () => isScratching = true);
+            canvas.addEventListener('mouseup', () => isScratching = false);
+            canvas.addEventListener('mousemove', scratch);
+
+            canvas.addEventListener('touchstart', () => isScratching = true);
+            canvas.addEventListener('touchend', () => isScratching = false);
+            canvas.addEventListener('touchmove', scratch);
+        }
+
+        // Balloon Popping
+        let poppedCount = 0;
+        function popBalloon(element) {
+            element.style.transform = 'scale(1.4)';
+            element.style.opacity = '0';
+            element.style.pointerEvents = 'none';
+            poppedCount++;
+            if (poppedCount >= 2) {
+                document.getElementById('balloonNote').style.display = 'block';
+            }
+        }
+
+        // Quiz Logic
+        function answerQuiz(isCorrect) {
+            if (isCorrect) document.getElementById('quizResult').style.display = 'block';
+        }
+
+        // Floating Heart Background
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => { heart.remove(); }, 6000);
+        }
+        setInterval(createHeart, 400);
+    </script>
+</body>
+</html>
